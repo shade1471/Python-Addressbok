@@ -19,3 +19,10 @@ class Application:
 
     def destroy(self):
         self.drv.quit()
+
+    def is_valid(self):
+        try:
+            self.drv.current_url
+            return True
+        except:
+            return False

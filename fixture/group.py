@@ -10,8 +10,9 @@ class GroupHelper:
         drv = self.app.drv
         self.open_groups_page()
         drv.find_elements(By.CSS_SELECTOR, '[name=new]')[0].click()
-        self.fill_group_form(drv, group)
+        self.fill_group_form(group)
         drv.find_element(By.CSS_SELECTOR, '[name=submit]').click()
+        self.open_groups_page()
 
     def change_field_value(self, field_name, text):
         drv = self.app.drv
@@ -34,6 +35,7 @@ class GroupHelper:
         self.open_groups_page()
         self.select_first_group()
         drv.find_element(By.CSS_SELECTOR, '[name=delete]').click()
+        self.open_groups_page()
 
     def select_first_group(self):
         drv = self.app.drv
@@ -46,6 +48,7 @@ class GroupHelper:
         for i in range(0, len(list_groups)):
             drv.find_elements(By.CSS_SELECTOR, '[method=post] .group input')[i].click()
         drv.find_elements(By.CSS_SELECTOR, '[name=delete]')[0].click()
+        self.open_groups_page()
 
     def modify_first_group(self, new_group_data):
         drv = self.app.drv
