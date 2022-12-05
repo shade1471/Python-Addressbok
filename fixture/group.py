@@ -28,7 +28,8 @@ class GroupHelper:
 
     def open_groups_page(self):
         drv = self.app.drv
-        drv.find_element(By.LINK_TEXT, 'groups').click()
+        if not (drv.current_url.endswith("/group/php") and len(drv.find_elements_by_name("new")) > 0):
+            drv.find_element(By.LINK_TEXT, 'groups').click()
 
     def delete_first_group(self):
         drv = self.app.drv
