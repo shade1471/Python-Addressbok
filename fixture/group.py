@@ -58,3 +58,8 @@ class GroupHelper:
         self.fill_group_form(new_group_data)
         drv.find_element(By.NAME, 'update').click()
         self.open_groups_page()
+
+    def count(self):
+        drv = self.app.drv
+        self.open_groups_page()
+        return len(drv.find_elements(By.NAME, 'selected[]'))
