@@ -14,6 +14,7 @@ class GroupHelper:
         self.fill_group_form(group)
         drv.find_element(By.CSS_SELECTOR, '[name=submit]').click()
         self.open_groups_page()
+        self.group_cache = None
 
     def change_field_value(self, field_name, text):
         drv = self.app.drv
@@ -33,15 +34,19 @@ class GroupHelper:
             drv.find_element(By.LINK_TEXT, 'groups').click()
 
     def delete_first_group(self):
+        self.delete_group_by_index(0)
+
+    def delete_group_by_index(self, index):
         drv = self.app.drv
         self.open_groups_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         drv.find_element(By.CSS_SELECTOR, '[name=delete]').click()
         self.open_groups_page()
+        self.group_cache = None
 
-    def select_first_group(self):
+    def select_group_by_index(self, index):
         drv = self.app.drv
-        drv.find_element(By.NAME, 'selected[]').click()
+        drv.find_elements(By.NAME, 'selected[]')[index].click()
 
     def delete_all_groups(self):
         drv = self.app.drv
@@ -51,31 +56,38 @@ class GroupHelper:
             drv.find_elements(By.CSS_SELECTOR, '[method=post] .group input')[i].click()
         drv.find_elements(By.CSS_SELECTOR, '[name=delete]')[0].click()
         self.open_groups_page()
+        self.group_cache = None
 
-    def modify_first_group(self, new_group_data):
+    def modify_first_group(self):
+        self.modify_group_by_index(0)
+
+    def modify_group_by_index(self, index, new_group_data):
         drv = self.app.drv
         self.open_groups_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         drv.find_element(By.NAME, 'edit').click()
         self.fill_group_form(new_group_data)
         drv.find_element(By.NAME, 'update').click()
         self.open_groups_page()
+        self.group_cache = None
 
     def count(self):
         drv = self.app.drv
         self.open_groups_page()
         return len(drv.find_elements(By.NAME, 'selected[]'))
 
-    def get_group_list(self):
-        drv = self.app.drv
-        self.open_groups_page()
-        groups = []
-        for element in drv.find_elements(By.CSS_SELECTOR, 'span.group'):
-            text = element.text
-            id = element.find_element(By.NAME, 'selected[]').get_attribute('value')
-            groups.append(Group(name=text, id=id))
+    group_cache = None
 
-        return groups
+    def get_group_list(self):
+        if self.group_cache is None:
+            drv = self.app.drv
+            self.open_groups_page()
+            self.group_cache = []
+            for element in drv.find_elements(By.CSS_SELECTOR, 'span.group'):
+                text = element.text
+                id = element.find_element(By.NAME, 'selected[]').get_attribute('value')
+                self.group_cache.append(Group(name=text, id=id))
+        return list(self.group_cache)
 
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
