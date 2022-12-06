@@ -89,5 +89,3 @@ class GroupHelper:
                 self.group_cache.append(Group(name=text, id=id))
         return list(self.group_cache)
 
-    def __eq__(self, other):
-        return self.id == other.id and self.name == other.name
