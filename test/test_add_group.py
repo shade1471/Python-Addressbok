@@ -1,14 +1,9 @@
-import random
-import string
-
-import pytest
-
 from model.group import Group
-from data.add_group import constant as test_data
 
 
-@pytest.mark.parametrize("group", test_data, ids=[repr(x) for x in test_data])
-def test_add_group(app, group):
+#@pytest.mark.parametrize("group", test_data, ids=[repr(x) for x in test_data])
+def test_add_group(app, json_groups):
+    group = json_groups
     old_groups = app.group.get_group_list()
     # group = Group(name='The best group!', header='My new header', footer='My new footer')
     app.group.create(group)
